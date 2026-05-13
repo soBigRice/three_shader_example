@@ -91,8 +91,6 @@ export function createGrid(
 
   // ---- 4. InstancedMesh ----
   const mesh = new THREE.InstancedMesh(geometry, material, totalInstances);
-  mesh.castShadow = true;
-  mesh.receiveShadow = true;
 
   // ---- 5. 铺设方块 ----
   const dummy = new THREE.Object3D();
