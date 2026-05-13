@@ -12,11 +12,8 @@ export default function CaseLayout({ title, description, children }: CaseLayoutP
   const [isFullscreen, setFullscreen] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
 
-  // 监听浏览器全屏变化（Esc 退出、F11 等）
   useEffect(() => {
-    const onChange = () => {
-      setFullscreen(!!document.fullscreenElement);
-    };
+    const onChange = () => setFullscreen(!!document.fullscreenElement);
     document.addEventListener('fullscreenchange', onChange);
     return () => document.removeEventListener('fullscreenchange', onChange);
   }, []);
@@ -30,81 +27,52 @@ export default function CaseLayout({ title, description, children }: CaseLayoutP
   }, []);
 
   return (
-    <div style={{
+    <div className="animate-in" style={{
       minHeight: isFullscreen ? 'auto' : '100vh',
-      background: '#0f0f1a',
+      background: 'var(--bg-primary)',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
     }}>
       {/* ---- 顶部导航（全屏时隐藏） ---- */}
       {!isFullscreen && (
-        <header style={{
+        <nav style={{
           width: '100%',
           maxWidth: 1000,
-          padding: '16px 24px',
+          padding: '14px 24px',
           display: 'flex',
           alignItems: 'center',
-          gap: 16,
+          gap: 14,
           flexShrink: 0,
         }}>
           <button
+            className="btn btn-ghost"
             onClick={() => navigate('/')}
-            style={{
-              background: 'rgba(255,255,255,0.08)',
-              border: '1px solid rgba(255,255,255,0.15)',
-              color: '#ccd',
-              padding: '6px 16px',
-              borderRadius: 6,
-              cursor: 'pointer',
-              fontSize: 14,
-            }}
+            style={{ padding: '5px 14px', fontSize: 13 }}
           >
             ← 案例列表
           </button>
-          <h2 style={{ fontSize: 20, fontWeight: 600, color: '#e0e0e0', margin: 0 }}>{title}</h2>
-        </header>
+          <span style={{
+            fontSize: 14,
+            fontWeight: 500,
+            color: 'var(--text-secondary)',
+          }}>
+            {title}
+          </span>
+        </nav>
       )}
 
-      {/* ---- 预览区域 ---- */}
+      {/* ---- 预览区 ---- */}
       <div
         ref={previewRef}
-        style={{
-          position: 'relative',
-          width: isFullscreen ? '100vw' : '100%',
-          maxWidth: isFullscreen ? undefined : 1000,
-          height: isFullscreen ? '100vh' : 520,
-          background: '#1a1a2e',
-          borderRadius: isFullscreen ? 0 : 12,
-          overflow: 'hidden',
-          border: isFullscreen ? 'none' : '1px solid rgba(255,255,255,0.1)',
-          flexShrink: 0,
-        }}
+        className={isFullscreen ? 'preview-box fullscreen' : 'preview-box normal'}
       >
         {children}
 
-        {/* ---- 全屏切换按钮 ---- */}
         <button
+          className="fs-btn"
           onClick={toggleFullscreen}
           title={isFullscreen ? '退出全屏 (Esc)' : '全屏预览'}
-          style={{
-            position: 'absolute',
-            bottom: 12,
-            right: 12,
-            zIndex: 20,
-            background: 'rgba(0,0,0,0.5)',
-            border: '1px solid rgba(255,255,255,0.2)',
-            color: '#ccd',
-            width: 36,
-            height: 36,
-            borderRadius: 8,
-            cursor: 'pointer',
-            fontSize: 18,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backdropFilter: 'blur(6px)',
-          }}
         >
           {isFullscreen ? '✕' : '⛶'}
         </button>
@@ -115,14 +83,25 @@ export default function CaseLayout({ title, description, children }: CaseLayoutP
         <section style={{
           width: '100%',
           maxWidth: 1000,
-          padding: '24px',
-          color: '#8899bb',
-          fontSize: 15,
-          lineHeight: 1.8,
+          padding: '22px 24px',
           flexShrink: 0,
         }}>
-          <h3 style={{ color: '#ccd', fontSize: 17, marginBottom: 10 }}>简介</h3>
-          <p style={{ margin: 0 }}>{description}</p>
+          <h3 style={{
+            fontSize: 15,
+            fontWeight: 600,
+            color: 'var(--text-primary)',
+            marginBottom: 8,
+          }}>
+            简介
+          </h3>
+          <p style={{
+            fontSize: 14,
+            color: 'var(--text-secondary)',
+            lineHeight: 1.7,
+            maxWidth: 640,
+          }}>
+            {description}
+          </p>
         </section>
       )}
     </div>
