@@ -1,0 +1,24 @@
+/* 全局重置：确保 canvas 填满整个窗口 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+#app {
+  width: 100%;
+  height: 100%;
+}
+
+/* Three.js canvas 填满容器 */
+#app canvas {
+  display: block;
+}
