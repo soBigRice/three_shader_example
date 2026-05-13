@@ -1,4 +1,4 @@
-/* 全局重置：确保 canvas 填满整个窗口 */
+/* 全局重置 */
 * {
   margin: 0;
   padding: 0;
@@ -6,19 +6,14 @@
 }
 
 html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+}
+
 body {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-}
-
-#app {
-  width: 100%;
-  height: 100%;
-}
-
-/* Three.js canvas 填满容器 */
-#app canvas {
-  display: block;
+  background: #0f0f1a;
+  color: #e0e0e0;
 }
