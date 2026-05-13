@@ -21,30 +21,28 @@ export interface SceneSetup {
 /**
  * 初始化场景、相机、渲染器
  *
- * 相机使用俯视角度（约 50° 俯角），让方块的高度变化清晰可见
- * 渲染器开启抗锯齿以提升视觉效果
+ * @param width  - 容器宽度（像素）
+ * @param height - 容器高度（像素）
  */
-export function createScene(): SceneSetup {
+export function createScene(width: number, height: number): SceneSetup {
   // ---- Renderer ----
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setSize(width, height);
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
   // ---- Scene ----
   const scene = new THREE.Scene();
   scene.background = new THREE.Color('#1a1a2e');
-  // 添加一层淡雾，远处方块自然淡出
   scene.fog = new THREE.Fog('#1a1a2e', 8, 35);
 
   // ---- Camera ----
-  // 等距视角：从上方斜 45° 俯视，能同时看到方块顶面和侧面
   const camera = new THREE.PerspectiveCamera(
-    50,                           // FOV
-    window.innerWidth / window.innerHeight, // Aspect
-    0.1,                          // Near
-    100,                          // Far
+    50,              // FOV
+    width / Math.max(height, 1), // Aspect
+    0.1,             // Near
+    100,             // Far
   );
   // 摄像机位置：从右上方俯视场地中心
   camera.position.set(14, 12, 14);
@@ -98,16 +96,4 @@ export function createScene(): SceneSetup {
   scene.add(ground);
 
   return { scene, camera, renderer, controls };
-}
-
-/**
- * 响应窗口缩放，更新相机和渲染器
- */
-export function handleResize(
-  camera: THREE.PerspectiveCamera,
-  renderer: THREE.WebGLRenderer,
-): void {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
 }
