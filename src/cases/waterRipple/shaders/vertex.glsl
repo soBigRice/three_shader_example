@@ -22,7 +22,9 @@ uniform float uMaxHeight;         // 最大长高高度（世界单位）
 uniform float uCubeSize;          // 方块原始尺寸
 uniform float uTime;              // 全局时间
 
-varying float vHeight;            // 归一化高度（0~1），传给 fragment shader
+varying float vHeight;            // 归一化高度（0~1）
+varying vec3 vWorldNormal;        // 世界空间法线（传给 fragment 做光照）
+varying vec3 vWorldPos;           // 世界空间位置（传给 fragment 做光照）
 
 float computeWaveHeight(vec3 instanceCenter) {
   float total = 0.0;
@@ -83,12 +85,16 @@ void main() {
   vHeight = normalizedHeight;
 
   // 沿 Y 轴拉伸方块（底部固定在地面，顶部向上长高）
-  // 公式：先缩放 Y 轴，再向上偏移半个增长量以保持底部位置不变
   float halfCube = uCubeSize * 0.5;
   float growHeight = normalizedHeight * uMaxHeight;
   float scaleY = 1.0 + growHeight / uCubeSize;
   vec3 pos = position;
   pos.y = (pos.y + halfCube) * scaleY - halfCube;
 
-  gl_Position = projectionMatrix * modelViewMatrix * instanceMatrix * vec4(pos, 1.0);
+  // 世界空间位置和法线（传给 fragment 做光照）
+  vec4 worldPos = instanceMatrix * vec4(pos, 1.0);
+  vWorldPos = worldPos.xyz;
+  vWorldNormal = normalize(mat3(instanceMatrix) * normal);
+
+  gl_Position = projectionMatrix * modelViewMatrix * worldPos;
 }

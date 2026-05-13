@@ -1,42 +1,61 @@
 /**
  * JumpBox Fragment Shader — 水波涟漪效果
  *
- * 颜色逻辑：多段渐变，黑底霓虹风格
- *   高度 0.0（无波） → 暗蓝黑 #0a0a24
- *   高度 0.2         → 电光蓝 #3344ff
- *   高度 0.5         → 青     #00e5ff
- *   高度 0.8         → 品红   #ff3388
- *   高度 1.0（波峰） → 亮白   #ffffff
+ * 光照：Blinn-Phong（环境光 + 漫反射 + 高光）
+ * 颜色：基于高度的多段渐变，叠加光照
  */
 
+uniform vec3 uLightDir;       // 主光源方向（世界空间，已归一化）
+uniform vec3 uLightColor;     // 主光源颜色
+uniform vec3 uAmbientColor;   // 环境光颜色
+uniform vec3 uCameraPos;      // 相机位置（世界空间）
 uniform float uTime;
 
 varying float vHeight;
+varying vec3 vWorldNormal;
+varying vec3 vWorldPos;
 
 void main() {
-  // 暗蓝黑 → 电光蓝
-  vec3 idle   = vec3(0.039, 0.039, 0.141);   // #0a0a24
-  vec3 blue   = vec3(0.200, 0.267, 1.000);   // #3344ff
+  vec3 N = normalize(vWorldNormal);
+  vec3 L = normalize(uLightDir);
+  vec3 V = normalize(uCameraPos - vWorldPos);
+  vec3 H = normalize(L + V);  // Blinn-Phong 半角向量
+
+  // ---- 基于高度的基础色：霓虹渐变 ----
+  vec3 idle    = vec3(0.10, 0.12, 0.22);       // 暗蓝黑
+  vec3 blue    = vec3(0.25, 0.35, 1.00);       // 电光蓝 #4059ff
+  vec3 cyan    = vec3(0.00, 0.95, 1.00);       // 青 #00f2ff
+  vec3 magenta = vec3(1.00, 0.15, 0.55);       // 品红 #ff268c
+  vec3 peak    = vec3(1.00, 0.84, 0.25);       // 金橙 #ffd640
+
   float t1 = smoothstep(0.0, 0.2, vHeight);
-  vec3 color = mix(idle, blue, t1);
-
-  // 电光蓝 → 青
-  vec3 cyan = vec3(0.0, 0.898, 1.0);         // #00e5ff
+  vec3 baseColor = mix(idle, blue, t1);
   float t2 = smoothstep(0.2, 0.5, vHeight);
-  color = mix(color, cyan, t2);
-
-  // 青 → 品红
-  vec3 magenta = vec3(1.0, 0.2, 0.533);       // #ff3388
+  baseColor = mix(baseColor, cyan, t2);
   float t3 = smoothstep(0.5, 0.8, vHeight);
-  color = mix(color, magenta, t3);
-
-  // 品红 → 亮白
-  vec3 white = vec3(1.0, 1.0, 1.0);           // #ffffff
+  baseColor = mix(baseColor, magenta, t3);
   float t4 = smoothstep(0.8, 1.0, vHeight);
-  color = mix(color, white, t4);
+  baseColor = mix(baseColor, peak, t4);
 
-  // 波峰微弱的呼吸闪烁
-  float pulse = sin(uTime * 5.0 + vHeight * 8.0) * 0.04 + 1.0;
+  // ---- Blinn-Phong 光照 ----
+  float NdotL = max(dot(N, L), 0.0);
+  float NdotH = max(dot(N, H), 0.0);
+
+  vec3 ambient = baseColor * uAmbientColor;
+  vec3 diffuse = baseColor * uLightColor * NdotL;
+
+  // 镜面高光
+  float specular = pow(NdotH, 48.0);
+  float specMask = smoothstep(0.1, 0.4, vHeight);
+  vec3 spec = uLightColor * specular * specMask * 0.4;
+
+  // 涟漪自发光：高度越高越艳丽
+  vec3 emissive = baseColor * vHeight * 1.6;
+
+  vec3 color = ambient + diffuse + spec + emissive;
+
+  // 微弱的呼吸闪烁
+  float pulse = sin(uTime * 4.0 + vHeight * 7.0) * 0.03 + 1.0;
   color *= mix(1.0, pulse, smoothstep(0.1, 0.4, vHeight));
 
   gl_FragColor = vec4(color, 1.0);

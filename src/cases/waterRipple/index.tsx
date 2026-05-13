@@ -63,6 +63,8 @@ export default function WaterRipple() {
       stats.begin();
       const elapsed = performance.now() / 1000;
       gridState.material.uniforms.uTime.value = elapsed;
+      // 同步相机位置给 Shader（Blinn-Phong 高光需要）
+      gridState.material.uniforms.uCameraPos.value.copy(camera.position);
       controls.update();
       renderer.render(scene, camera);
       stats.end();
