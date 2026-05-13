@@ -22,7 +22,7 @@ export interface GUIControls {
  *   - 波动：传播速度、时间衰减、空间衰减
  *   - 波纹：频率、振幅
  */
-export function createGUI(gridState: GridState): GUIControls {
+export function createGUI(gridState: GridState, container: HTMLElement): GUIControls {
   const { material } = gridState;
 
   const params: WaveParams & { maxHeight: number } = {
@@ -35,6 +35,12 @@ export function createGUI(gridState: GridState): GUIControls {
   };
 
   const gui = new GUI({ title: 'JumpBox Controls', width: 280 });
+  // 将 GUI 面板插入容器内，固定定位跟随容器
+  container.appendChild(gui.domElement);
+  gui.domElement.style.position = 'absolute';
+  gui.domElement.style.top = '8px';
+  gui.domElement.style.right = '8px';
+  gui.domElement.style.zIndex = '15';
 
   // ---- 高度 ----
   const folderHeight = gui.addFolder('高度');

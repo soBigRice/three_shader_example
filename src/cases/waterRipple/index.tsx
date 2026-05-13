@@ -43,8 +43,8 @@ export default function WaterRipple() {
     // ---- 交互 ----
     setupInteraction(gridState, camera, renderer.domElement);
 
-    // ---- GUI ----
-    const { gui } = createGUI(gridState);
+    // ---- GUI（挂载到容器内，不随全屏切换跑偏）----
+    const { gui } = createGUI(gridState, container);
 
     // ---- 容器尺寸变化时更新 renderer 和相机 ----
     const resizeObserver = new ResizeObserver(() => {

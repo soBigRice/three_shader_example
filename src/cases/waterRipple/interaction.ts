@@ -41,9 +41,10 @@ export function setupInteraction(
   domElement.addEventListener('pointerup', (event: PointerEvent) => {
     if (moved) return;
 
-    // ---- 1. NDC 坐标 ----
-    mouse.x = (event.clientX / domElement.clientWidth) * 2 - 1;
-    mouse.y = -(event.clientY / domElement.clientHeight) * 2 + 1;
+    // ---- 1. NDC 坐标（考虑 canvas 在页面中的偏移） ----
+    const rect = domElement.getBoundingClientRect();
+    mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
     // ---- 2. Raycaster ----
     raycaster.setFromCamera(mouse, camera);
