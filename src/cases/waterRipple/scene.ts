@@ -62,7 +62,7 @@ export function createScene(width: number, height: number): SceneSetup {
   scene.add(fillLight);
 
   // ---- 网格地面 / Grid floor ----
-  const grid = new THREE.GridHelper(30, 30, '#222233', '#111118');
+  const grid = new THREE.GridHelper(30, 30, '#00ccff', '#003366');
   grid.position.y = -0.38;
   scene.add(grid);
 

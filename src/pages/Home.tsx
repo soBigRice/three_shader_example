@@ -26,6 +26,20 @@ const cases: CaseItem[] = [
     gradient: 'linear-gradient(135deg, #1a1040 0%, #0d3b5c 50%, #0a2a3a 100%)',
     icon: '🌊',
   },
+  {
+    id: 'sphere-dissolve',
+    titleKey: 'case.sphereDissolve.title',
+    descKey: 'case.sphereDissolve.desc',
+    tagKeys: [
+      'case.sphereDissolve.tag.0',
+      'case.sphereDissolve.tag.1',
+      'case.sphereDissolve.tag.2',
+      'case.sphereDissolve.tag.3',
+    ],
+    path: '/sphere-dissolve',
+    gradient: 'linear-gradient(135deg, #0d0d2b 0%, #1a0a2e 40%, #003333 100%)',
+    icon: '🔮',
+  },
 ];
 
 export default function Home() {
