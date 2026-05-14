@@ -1,8 +1,11 @@
 /**
- * interaction.ts — 鼠标交互模块（水波涟漪版）
+ * interaction.ts — 鼠标交互模块（水波涟漪版） / Mouse interaction module (water ripple)
  *
  * 使用 capture 阶段监听 pointerdown/pointerup，确保在 OrbitControls 之前处理
  * 每次点击独立产生一个波源，Shader 中累加所有活跃波源
+ *
+ * Uses capture-phase listeners for pointerdown/pointerup to intercept before OrbitControls.
+ * Each click spawns an independent wave source; all active sources are summed in the shader.
  */
 
 import * as THREE from 'three';
@@ -18,13 +21,13 @@ export function setupInteraction(
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
 
-  // 每次 pointerdown→pointerup 周期独立记录状态
+  // 每次 pointerdown→pointerup 周期独立记录状态 / Track state per pointerdown→pointerup cycle
   let startX = 0;
   let startY = 0;
   let moved = false;
   const DRAG_THRESHOLD = 4;
 
-  // capture 阶段处理，比 OrbitControls 先拿到事件
+  // capture 阶段处理，比 OrbitControls 先拿到事件 / Capture phase: fires before OrbitControls
   domElement.addEventListener('pointerdown', (event: PointerEvent) => {
     startX = event.clientX;
     startY = event.clientY;
@@ -41,12 +44,12 @@ export function setupInteraction(
   domElement.addEventListener('pointerup', (event: PointerEvent) => {
     if (moved) return;
 
-    // ---- 1. NDC 坐标（考虑 canvas 在页面中的偏移） ----
+    // ---- 1. NDC 坐标（考虑 canvas 在页面中的偏移） / NDC coords (accounting for canvas offset) ----
     const rect = domElement.getBoundingClientRect();
     mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
     mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
-    // ---- 2. Raycaster ----
+    // ---- 2. Raycaster / 射线检测 ----
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObject(mesh);
 
@@ -55,13 +58,13 @@ export function setupInteraction(
     const instanceIndex = intersects[0].instanceId;
     if (instanceIndex === undefined) return;
 
-    // ---- 3. 获取方块实例的世界位置 ----
+    // ---- 3. 获取方块实例的世界位置 / Get instance world position ----
     const matrix = new THREE.Matrix4();
     mesh.getMatrixAt(instanceIndex, matrix);
     const originX = matrix.elements[12];
     const originZ = matrix.elements[14];
 
-    // ---- 4. 添加波源 ----
+    // ---- 4. 添加波源 / Add wave origin ----
     const now = performance.now() / 1000;
     addWaveOrigin(gridState, originX, originZ, now);
   }, { capture: true });

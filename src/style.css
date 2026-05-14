@@ -1,8 +1,9 @@
 /* ==========================================
    Three.js Shader 案例库 · 全局样式系统
+   Three.js Shader Lab · Global Style System
    ========================================== */
 
-/* ---- CSS Variables ---- */
+/* ---- CSS Variables / CSS 变量 ---- */
 :root {
   --bg-primary: #09090d;
   --bg-secondary: #12121a;
@@ -27,7 +28,7 @@
   --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* ---- Reset ---- */
+/* ---- Reset / 重置 ---- */
 *,
 *::before,
 *::after {
@@ -51,14 +52,14 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ---- Typography ---- */
+/* ---- Typography / 排版 ---- */
 h1, h2, h3 {
   color: var(--text-primary);
   font-weight: 600;
   letter-spacing: -0.02em;
 }
 
-/* ---- Buttons ---- */
+/* ---- Buttons / 按钮 ---- */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -90,7 +91,7 @@ h1, h2, h3 {
   border-color: transparent;
 }
 
-/* ---- Tags ---- */
+/* ---- Tags / 标签 ---- */
 .tag {
   display: inline-block;
   padding: 2px 10px;
@@ -102,7 +103,7 @@ h1, h2, h3 {
   white-space: nowrap;
 }
 
-/* ---- Case Card ---- */
+/* ---- Case Card / 案例卡片 ---- */
 .case-card {
   background: var(--bg-glass);
   border: 1px solid var(--border);
@@ -147,7 +148,7 @@ h1, h2, h3 {
   margin-bottom: 12px;
 }
 
-/* ---- Preview Container ---- */
+/* ---- Preview Container / 预览容器 ---- */
 .preview-box {
   position: relative;
   width: 100%;
@@ -170,7 +171,7 @@ h1, h2, h3 {
   border: none;
 }
 
-/* ---- Fullscreen Button ---- */
+/* ---- Fullscreen Button / 全屏按钮 ---- */
 .fs-btn {
   position: absolute;
   bottom: 12px;
@@ -196,7 +197,7 @@ h1, h2, h3 {
   color: var(--text-primary);
 }
 
-/* ---- Page Fade In ---- */
+/* ---- Page Fade In / 页面淡入 ---- */
 @keyframes fadeUp {
   from {
     opacity: 0;
@@ -212,7 +213,7 @@ h1, h2, h3 {
   animation: fadeUp 0.4s ease-out;
 }
 
-/* ---- Home page background glow ---- */
+/* ---- Home page background glow / 首页背景光晕 ---- */
 .home-bg {
   position: relative;
   min-height: 100vh;

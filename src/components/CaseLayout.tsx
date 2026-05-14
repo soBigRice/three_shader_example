@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useT } from '../i18n/context';
 
 interface CaseLayoutProps {
   title: string;
@@ -8,6 +9,7 @@ interface CaseLayoutProps {
 }
 
 export default function CaseLayout({ title, description, children }: CaseLayoutProps) {
+  const { t } = useT();
   const navigate = useNavigate();
   const [isFullscreen, setFullscreen] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
@@ -34,7 +36,7 @@ export default function CaseLayout({ title, description, children }: CaseLayoutP
       flexDirection: 'column',
       alignItems: 'center',
     }}>
-      {/* ---- 顶部导航（全屏时隐藏） ---- */}
+      {/* ---- 顶部导航（全屏时隐藏） / Top nav (hidden in fullscreen) ---- */}
       {!isFullscreen && (
         <nav style={{
           width: '100%',
@@ -50,7 +52,7 @@ export default function CaseLayout({ title, description, children }: CaseLayoutP
             onClick={() => navigate('/')}
             style={{ padding: '5px 14px', fontSize: 13 }}
           >
-            ← 案例列表
+            {t('layout.back')}
           </button>
           <span style={{
             fontSize: 14,
@@ -62,7 +64,7 @@ export default function CaseLayout({ title, description, children }: CaseLayoutP
         </nav>
       )}
 
-      {/* ---- 预览区 ---- */}
+      {/* ---- 预览区 / Preview area ---- */}
       <div
         ref={previewRef}
         className={isFullscreen ? 'preview-box fullscreen' : 'preview-box normal'}
@@ -72,13 +74,13 @@ export default function CaseLayout({ title, description, children }: CaseLayoutP
         <button
           className="fs-btn"
           onClick={toggleFullscreen}
-          title={isFullscreen ? '退出全屏 (Esc)' : '全屏预览'}
+          title={isFullscreen ? t('layout.exitFullscreen') : t('layout.fullscreen')}
         >
           {isFullscreen ? '✕' : '⛶'}
         </button>
       </div>
 
-      {/* ---- 简介（全屏时隐藏） ---- */}
+      {/* ---- 简介（全屏时隐藏） / Overview (hidden in fullscreen) ---- */}
       {!isFullscreen && (
         <section style={{
           width: '100%',
@@ -92,7 +94,7 @@ export default function CaseLayout({ title, description, children }: CaseLayoutP
             color: 'var(--text-primary)',
             marginBottom: 8,
           }}>
-            简介
+            {t('layout.intro')}
           </h3>
           <p style={{
             fontSize: 14,

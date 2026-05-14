@@ -1,10 +1,11 @@
 import { useNavigate } from 'react-router-dom';
+import { useT } from '../i18n/context';
 
 interface CaseItem {
   id: string;
-  title: string;
-  desc: string;
-  tags: string[];
+  titleKey: string;
+  descKey: string;
+  tagKeys: string[];
   path: string;
   gradient: string;
   icon: string;
@@ -13,9 +14,14 @@ interface CaseItem {
 const cases: CaseItem[] = [
   {
     id: 'water-ripple',
-    title: '水波涟漪',
-    desc: '点击方块产生 Morlet 小波涟漪扩散，GPU Vertex Shader 实时计算阻尼波动方程，支持多点交互。',
-    tags: ['Vertex Shader', '波动方程', 'InstancedMesh', '多点交互'],
+    titleKey: 'case.waterRipple.title',
+    descKey: 'case.waterRipple.desc',
+    tagKeys: [
+      'case.waterRipple.tag.0',
+      'case.waterRipple.tag.1',
+      'case.waterRipple.tag.2',
+      'case.waterRipple.tag.3',
+    ],
     path: '/water-ripple',
     gradient: 'linear-gradient(135deg, #1a1040 0%, #0d3b5c 50%, #0a2a3a 100%)',
     icon: '🌊',
@@ -23,11 +29,32 @@ const cases: CaseItem[] = [
 ];
 
 export default function Home() {
+  const { lang, setLang, t } = useT();
   const navigate = useNavigate();
+
+  const toggleLang = () => setLang(lang === 'zh' ? 'en' : 'zh');
 
   return (
     <div className="home-bg animate-in">
-      {/* ---- Hero ---- */}
+      {/* ---- 语言切换 / Language switcher ---- */}
+      <div style={{
+        position: 'absolute',
+        top: 16,
+        right: 24,
+        zIndex: 10,
+      }}>
+        <button
+          className="btn btn-ghost"
+          onClick={toggleLang}
+          style={{ padding: '5px 14px', fontSize: 13, gap: 4 }}
+        >
+          <span style={{ opacity: 0.5 }}>{lang === 'zh' ? '中' : 'EN'}</span>
+          <span style={{ opacity: 0.3 }}>→</span>
+          <span>{lang === 'zh' ? 'EN' : '中'}</span>
+        </button>
+      </div>
+
+      {/* ---- Hero / 标题区 ---- */}
       <header style={{
         textAlign: 'center',
         padding: '80px 24px 48px',
@@ -50,14 +77,14 @@ export default function Home() {
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
         }}>
-          Three.js Shader 案例实验室
+          {t('home.title')}
         </h1>
         <p style={{ fontSize: 16, color: 'var(--text-muted)', maxWidth: 420, margin: '0 auto' }}>
-          GPU 驱动的交互式视觉效果集合 · 每个案例独立可运行
+          {t('home.subtitle')}
         </p>
       </header>
 
-      {/* ---- Case Grid ---- */}
+      {/* ---- Case Grid / 案例网格 ---- */}
       <main style={{
         maxWidth: 1100,
         margin: '0 auto',
@@ -68,7 +95,7 @@ export default function Home() {
       }}>
         {cases.map((c) => (
           <div key={c.id} className="case-card" onClick={() => navigate(c.path)}>
-            {/* 缩略图 */}
+            {/* 缩略图 / Thumbnail */}
             <div className="case-card-thumb" style={{ background: c.gradient }}>
               <span style={{ opacity: 0.7 }}>{c.icon}</span>
               <div style={{
@@ -77,20 +104,20 @@ export default function Home() {
                 background: 'radial-gradient(ellipse at 50% 50%, rgba(108,92,231,0.12), transparent 70%)',
               }} />
             </div>
-            {/* 信息区 */}
+            {/* 信息区 / Info area */}
             <div className="case-card-body">
-              <h3>{c.title}</h3>
-              <p>{c.desc}</p>
+              <h3>{t(c.titleKey)}</h3>
+              <p>{t(c.descKey)}</p>
               <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                {c.tags.map((tag) => (
-                  <span key={tag} className="tag">{tag}</span>
+                {c.tagKeys.map((tagKey) => (
+                  <span key={tagKey} className="tag">{t(tagKey)}</span>
                 ))}
               </div>
             </div>
           </div>
         ))}
 
-        {/* 占位卡片：提示更多案例 */}
+        {/* 占位卡片：提示更多案例 / Placeholder card: more cases coming */}
         <div style={{
           background: 'var(--bg-glass)',
           border: '1px dashed var(--border)',
@@ -105,11 +132,11 @@ export default function Home() {
           fontSize: 14,
         }}>
           <span style={{ fontSize: 32, opacity: 0.3 }}>+</span>
-          <span>更多案例即将添加</span>
+          <span>{t('home.moreComing')}</span>
         </div>
       </main>
 
-      {/* ---- Footer ---- */}
+      {/* ---- Footer / 页脚 ---- */}
       <footer style={{
         textAlign: 'center',
         padding: '24px',
@@ -117,7 +144,7 @@ export default function Home() {
         color: 'var(--text-muted)',
         borderTop: '1px solid var(--border)',
       }}>
-        Built with Three.js · React · Vite
+        {t('home.footer')}
       </footer>
     </div>
   );
