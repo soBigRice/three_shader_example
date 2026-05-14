@@ -62,7 +62,8 @@ export function createScene(width: number, height: number): SceneSetup {
   renderer.setSize(width, height);
 
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color('#000000');
+  scene.background = new THREE.Color('#02030a');
+  scene.fog = new THREE.Fog('#02030a', 8, 18);
 
   const camera = new THREE.PerspectiveCamera(45, width / Math.max(height, 1), 0.1, 100);
   camera.position.set(5, 3, 7);
@@ -76,11 +77,11 @@ export function createScene(width: number, height: number): SceneSetup {
   controls.maxDistance = 15;
   controls.maxPolarAngle = Math.PI;
   controls.autoRotate = true;
-  controls.autoRotateSpeed = 0.4;
+  controls.autoRotateSpeed = 0.62;
   controls.update();
 
   // 参考网格地面 / Reference grid floor
-  const grid = new THREE.GridHelper(16, 32, '#00ccff', '#003366');
+  const grid = new THREE.GridHelper(16, 32, '#3be9ff', '#153a6a');
   grid.position.y = -1.9;
   scene.add(grid);
 
@@ -99,17 +100,17 @@ export function createSphere(): DissolveState {
     uniforms: {
       uTime: { value: 0 },
       uDissolveMode: { value: 0.0 },
-      uDissolveProgress: { value: 0.15 },
-      uEdgeWidth: { value: 0.06 },
-      uEdgeColor: { value: new THREE.Color('#ff6622') },
-      uNoiseScale: { value: 1.2 },
-      uBaseColor: { value: new THREE.Color('#3366cc') },
-      uLightDir: { value: new THREE.Vector3(5, 10, 5).normalize() },
+      uDissolveProgress: { value: 0.10 },
+      uEdgeWidth: { value: 0.085 },
+      uEdgeColor: { value: new THREE.Color('#6ef5ff') },
+      uNoiseScale: { value: 1.65 },
+      uBaseColor: { value: new THREE.Color('#4c63ff') },
+      uLightDir: { value: new THREE.Vector3(4, 9, 7).normalize() },
       uCameraPos: { value: new THREE.Vector3() },
-      uAmbient: { value: 0.22 },
-      uDiffuse: { value: 0.55 },
-      uSpecular: { value: 0.50 },
-      uShininess: { value: 48.0 },
+      uAmbient: { value: 0.16 },
+      uDiffuse: { value: 0.68 },
+      uSpecular: { value: 0.95 },
+      uShininess: { value: 92.0 },
     },
   });
 
@@ -134,12 +135,12 @@ export function createWireframeOverlay(): WireframeState {
     uniforms: {
       uTime: { value: 0 },
       uDissolveMode: { value: 0.0 },
-      uDissolveProgress: { value: 0.15 },
-      uEdgeWidth: { value: 0.06 },
-      uEdgeColor: { value: new THREE.Color('#ff6622') },
-      uNoiseScale: { value: 1.2 },
-      uWireframeWidth: { value: 1.5 },
-      uWireframeColor: { value: new THREE.Color('#00ddff') },
+      uDissolveProgress: { value: 0.10 },
+      uEdgeWidth: { value: 0.085 },
+      uEdgeColor: { value: new THREE.Color('#6ef5ff') },
+      uNoiseScale: { value: 1.65 },
+      uWireframeWidth: { value: 1.7 },
+      uWireframeColor: { value: new THREE.Color('#3ef1ff') },
     },
     depthTest: true,
     depthWrite: true,

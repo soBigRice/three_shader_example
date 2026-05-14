@@ -100,15 +100,29 @@ void main() {
   vec3 L = normalize(uLightDir);
   vec3 V = normalize(uCameraPos - vWorldPosition);
 
+  // ---- 表面流动纹理 / Surface flow pattern ----
+  // 用两层噪声生成缓慢流动的能量纹理，让默认静态观感更有层次
+  // Use two noise layers for a slow energy-flow pattern to enrich default look
+  float flowA = fbm(vWorldPosition * (uNoiseScale * 1.35) + vec3(0.0, uTime * 0.22, uTime * 0.08));
+  float flowB = fbm(vWorldPosition.zyx * (uNoiseScale * 0.9) + vec3(uTime * 0.12, 0.0, uTime * 0.19));
+  float flow = clamp(flowA * 0.65 + flowB * 0.35, 0.0, 1.0);
+  vec3 accentColor = mix(uEdgeColor, vec3(0.55, 0.95, 1.0), 0.35);
+  vec3 surfaceColor = mix(uBaseColor, accentColor, smoothstep(0.38, 0.92, flow) * 0.38);
+
   // 实体模式 Blinn-Phong 光照 / Solid mode Blinn-Phong lighting
-  vec3 lit = applyLighting(uBaseColor, N, L, V);
+  vec3 lit = applyLighting(surfaceColor, N, L, V);
 
   // 消融边缘混入辉光颜色 / Blend edge glow into dissolve boundary
   vec3 color = mix(lit, uEdgeColor, edgeGlow);
 
-  // 接近消融边界的微光 / Subtle emission near dissolve edge
-  float emission = edgeGlow * 0.6;
+  // ---- 菲涅耳外环 + 边缘脉冲 / Fresnel rim + edge pulse ----
+  float fresnel = pow(1.0 - max(dot(N, V), 0.0), 2.5);
+  float pulse = 0.72 + 0.28 * sin(uTime * 2.8 + flow * 6.2831);
+
+  // 接近消融边界的发光 + 视角辉光 / Edge emission + view-dependent glow
+  float emission = edgeGlow * (0.58 + 0.55 * pulse);
   color += uEdgeColor * emission;
+  color += accentColor * fresnel * (0.32 + 0.25 * pulse);
 
   gl_FragColor = vec4(color, 1.0);
 }

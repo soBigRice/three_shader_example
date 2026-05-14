@@ -79,9 +79,10 @@ void main() {
   if (wire < 0.03) discard;
 
   // 线框色为基底，消融边缘叠加辉光 / Wireframe color base, dissolve edge adds glow
-  vec3 color = uWireframeColor * (0.95 + wire * 0.05);
+  float pulse = 0.72 + 0.28 * sin(uTime * 2.2 + vWorldPos.y * 2.4);
+  vec3 color = uWireframeColor * (0.85 + wire * 0.12 + pulse * 0.08);
   // 边缘辉光叠加（而非替换） / Edge glow added on top (not replacing wireframe color)
-  color += uEdgeColor * edgeGlow * 0.8;
+  color += uEdgeColor * edgeGlow * (0.72 + pulse * 0.38);
 
   gl_FragColor = vec4(color, 1.0);
 }

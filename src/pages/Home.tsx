@@ -40,6 +40,20 @@ const cases: CaseItem[] = [
     gradient: 'linear-gradient(135deg, #0d0d2b 0%, #1a0a2e 40%, #003333 100%)',
     icon: '🔮',
   },
+  {
+    id: 'letter-dissolve',
+    titleKey: 'case.letterDissolve.title',
+    descKey: 'case.letterDissolve.desc',
+    tagKeys: [
+      'case.letterDissolve.tag.0',
+      'case.letterDissolve.tag.1',
+      'case.letterDissolve.tag.2',
+      'case.letterDissolve.tag.3',
+    ],
+    path: '/letter-dissolve',
+    gradient: 'linear-gradient(135deg, #2f1f10 0%, #50351a 42%, #23180d 100%)',
+    icon: '✉️',
+  },
 ];
 
 export default function Home() {

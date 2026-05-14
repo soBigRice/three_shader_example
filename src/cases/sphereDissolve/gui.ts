@@ -48,20 +48,20 @@ export function createGUI(
 
   const params = {
     dissolveMode: 'noise' as 'noise' | 'horizontal',
-    dissolveProgress: 0.15,
-    edgeWidth: 0.06,
-    noiseScale: 1.2,
-    edgeColor: '#ff6622',
+    dissolveProgress: 0.10,
+    edgeWidth: 0.085,
+    noiseScale: 1.65,
+    edgeColor: '#6ef5ff',
     wireframe: false,
-    wireframeWidth: 1.5,
-    wireframeColor: '#00ddff',
-    baseColor: '#3366cc',
-    ambient: 0.22,
-    diffuse: 0.55,
-    specular: 0.50,
-    shininess: 48.0,
-    autoAnimate: false,
-    animSpeed: 0.3,
+    wireframeWidth: 1.7,
+    wireframeColor: '#3ef1ff',
+    baseColor: '#4c63ff',
+    ambient: 0.16,
+    diffuse: 0.68,
+    specular: 0.95,
+    shininess: 92.0,
+    autoAnimate: true,
+    animSpeed: 0.42,
   };
 
   const gui = new GUI({ title: 'Dissolve Controls', width: 280 });
